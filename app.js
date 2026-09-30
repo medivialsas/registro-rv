@@ -2,7 +2,7 @@
    Funciona sin conexión: todo se guarda en el celular (IndexedDB) y se envía al Google Sheets cuando hay señal. */
 'use strict';
 
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 const COLOR_NAMES = {
   blanco: 'Blanco', rojo: 'Rojo', amarillo: 'Amarillo', amarillo_verde_fl: 'Amarillo-verde fluorescente',
   azul: 'Azul', verde: 'Verde', cafe: 'Café'

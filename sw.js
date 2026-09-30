@@ -1,6 +1,6 @@
 /* Service worker: guarda la app en el celular para que abra sin señal.
    Al publicar cambios, subir el número de VERSION para que los celulares se actualicen. */
-const VERSION = 'rv-1.0.1';
+const VERSION = 'rv-1.0.2';
 const ASSETS = [
   './', 'index.html', 'styles.css', 'app.js', 'config.js', 'manifest.webmanifest',
   'data/catalogo.json', 'data/config.json',
