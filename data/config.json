@@ -1,0 +1,90 @@
+{
+ "version": "base-2026-09-30",
+ "proyectos": [
+  "Accesos Norte",
+  "Concesión Alto Magdalena (Honda - P. Salgar - Girardot)",
+  "Interventoría Alto Magdalena",
+  "Antioquia - Bolivar",
+  "Barranquilla - Ciénaga - Mamatoco",
+  "Bogotá - Villavicencio",
+  "Bogotá - Villavicencio (Chirajara - Fundadores)",
+  "Bogotá - Villeta",
+  "Bucaramanga - Barrancabermeja - Yondó",
+  "Concesión DEVISAB - Cachipay",
+  "Conexión Norte (Caucasia - Zaragoza)",
+  "Conexión Pacífico 1",
+  "El Juncal - Neiva - Girardot",
+  "Girardot - Ibagué - Cajamarca",
+  "Ibagué - Honda - Cambao - Manizales",
+  "Interventoría Concesión Vías del Nus",
+  "Pamplona - Cucuta",
+  "Paso Urbano - Líbano, Tolíma",
+  "Pasto - Rumichaca",
+  "PISA (Buga - Tuluá - La Paila)",
+  "Popayán - Santander de Quilichao",
+  "Puerta de Hierro - Palmar de Varela - Carreto - Cruz del Viso",
+  "Rio Magdalena 2",
+  "Ruta Caribe",
+  "Ruta del Sol 2 - Sector 1",
+  "Ruta del Sol 2 - Sector 2",
+  "Santa Marta - Riohacha - Paraguachón",
+  "Santana - Mocoa - Neiva",
+  "Transmilenio - Patio Portal El Vínculo",
+  "Transversal Del Sisga",
+  "Troncal del Magdalena Sabana de Torres - Curumaní",
+  "Villavicencio - Yopal"
+ ],
+ "tecnicos": [
+  "Hugo Amado",
+  "Camilo Castiblanco",
+  "Darío Vásquez"
+ ],
+ "equipos": [
+  "GA1048",
+  "GA1025"
+ ],
+ "tipos_lamina": [
+  "I",
+  "IV",
+  "IX",
+  "XI"
+ ],
+ "minimos": {
+  "I": {
+   "blanco": 70,
+   "amarillo": 50,
+   "rojo": 14,
+   "verde": 9,
+   "azul": 4,
+   "cafe": 1
+  },
+  "IV": {
+   "blanco": 360,
+   "amarillo": 270,
+   "rojo": 65,
+   "verde": 50,
+   "azul": 30,
+   "cafe": 18,
+   "amarillo_verde_fl": 290
+  },
+  "IX": {
+   "blanco": 380,
+   "amarillo": 285,
+   "rojo": 76,
+   "verde": 38,
+   "azul": 17,
+   "cafe": 12,
+   "amarillo_verde_fl": 300
+  },
+  "XI": {
+   "blanco": 580,
+   "amarillo": 435,
+   "rojo": 87,
+   "verde": 58,
+   "azul": 26,
+   "cafe": 17,
+   "amarillo_verde_fl": 460
+  }
+ },
+ "porcentaje_evaluacion": 100
+}

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16122C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Registro RV">
+<title>Registro RV · MEDIVIAL</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 28" aria-hidden="true">
+      <path d="M2 27 L17 2 L23 2 L38 27 Z" fill="#3868AB"/>
+      <path d="M20 5 L20 9 M20 12 L20 17 M20 20 L20 26" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-name">MEDIVIAL</span>
+      <span class="brand-sub">Retrorreflectividad · señalización vertical</span>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="sync-pill" id="sync-pill" type="button" aria-live="polite">
+      <span class="dot" id="sync-dot"></span><span id="sync-text">Sin pendientes</span>
+    </button>
+    <button class="icon-btn" id="btn-ajustes" type="button" aria-label="Ajustes">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.6 7.6 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6a7.7 7.7 0 0 0 0 3l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.6 7.6 0 0 0 2.6-1.5l2.4 1 2-3.4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ JORNADA ============ -->
+  <section class="screen" id="scr-jornada" hidden>
+    <div class="screen-head">
+      <h1>Datos de la jornada</h1>
+      <p class="lead">Se llenan una vez y se aplican a cada señal que registres hoy.</p>
+    </div>
+    <form id="form-jornada" class="stack" novalidate>
+      <div class="field">
+        <label for="j-fecha">Fecha</label>
+        <input id="j-fecha" type="date" required>
+      </div>
+      <div class="field">
+        <label for="j-proyecto">Proyecto</label>
+        <select id="j-proyecto" required></select>
+      </div>
+      <fieldset class="field">
+        <legend>Tramo o Unidad Funcional</legend>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="j-division" id="j-div-tramo" value="Tramo" checked><label for="j-div-tramo">Tramo</label>
+          <input type="radio" name="j-division" id="j-div-uf" value="UF"><label for="j-div-uf">UF</label>
+        </div>
+        <input id="j-tramo" type="text" list="dl-tramos" placeholder="Nombre o número" autocomplete="off" required>
+        <datalist id="dl-tramos"></datalist>
+      </fieldset>
+      <div class="field">
+        <label for="j-tecnico">Técnico</label>
+        <select id="j-tecnico" required></select>
+      </div>
+      <div class="field">
+        <label for="j-equipo">Retroreflectómetro <span class="hint">RoadVista 922 Handheld · serial</span></label>
+        <select id="j-equipo" required></select>
+      </div>
+      <fieldset class="field">
+        <legend>Abscisado</legend>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="j-sistema" id="j-sis-k" value="K" checked><label for="j-sis-k">K 0+000</label>
+          <input type="radio" name="j-sistema" id="j-sis-pr" value="PR"><label for="j-sis-pr">PR 0+000</label>
+        </div>
+      </fieldset>
+      <p class="form-error" id="j-error" hidden></p>
+      <button class="btn btn-primary btn-block" type="submit">Iniciar jornada</button>
+    </form>
+  </section>
+
+  <!-- ============ REGISTRO ============ -->
+  <section class="screen" id="scr-registro" hidden>
+    <button class="jornada-bar" id="jornada-bar" type="button">
+      <span class="jb-main" id="jb-main"></span>
+      <span class="jb-sub" id="jb-sub"></span>
+      <span class="jb-edit">Cambiar</span>
+    </button>
+
+    <div class="edit-banner" id="edit-banner" hidden>
+      <span id="edit-banner-text">Editando registro</span>
+      <button class="btn btn-ghost btn-sm" id="btn-cancel-edit" type="button">Cancelar edición</button>
+    </div>
+
+    <form id="form-registro" class="stack" novalidate>
+
+      <!-- 1. Señal -->
+      <section class="step" id="step-senal">
+        <h2 class="step-title"><span class="step-n">1</span>Señal</h2>
+        <div class="fam-grid" role="radiogroup" aria-label="Familia de señal">
+          <input type="radio" name="r-familia" id="fam-SR" value="SR"><label for="fam-SR" class="fam fam-sr"><span class="fam-shape"></span><b>Reglamentaria</b><small>SR</small></label>
+          <input type="radio" name="r-familia" id="fam-SP" value="SP"><label for="fam-SP" class="fam fam-sp"><span class="fam-shape"></span><b>Preventiva</b><small>SP</small></label>
+          <input type="radio" name="r-familia" id="fam-SI" value="SI"><label for="fam-SI" class="fam fam-si"><span class="fam-shape"></span><b>Informativa</b><small>SI</small></label>
+          <input type="radio" name="r-familia" id="fam-ST" value="ST"><label for="fam-ST" class="fam fam-st"><span class="fam-shape"></span><b>Turística</b><small>ST</small></label>
+        </div>
+
+        <div class="picker" id="picker" hidden>
+          <input id="r-buscar" type="search" placeholder="Buscar por número o nombre (ej. 47, curva)" autocomplete="off">
+          <ul class="picker-list" id="picker-list" role="listbox" aria-label="Señales"></ul>
+        </div>
+
+        <div class="sign-card" id="sign-card" hidden>
+          <div class="sign-thumb" id="sign-thumb"></div>
+          <div class="sign-info">
+            <div class="sign-code" id="sign-code"></div>
+            <div class="sign-name" id="sign-name"></div>
+            <div class="sign-sub" id="sign-sub"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-cambiar-senal" type="button">Cambiar</button>
+        </div>
+
+        <div class="field">
+          <label for="r-consecutivo">N.º de señal <span class="hint">consecutivo del proyecto</span></label>
+          <input id="r-consecutivo" type="number" inputmode="numeric" min="1" step="1" class="num-input">
+        </div>
+      </section>
+
+      <!-- 2. Abscisa -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-n">2</span>Abscisa</h2>
+        <div class="abscisa">
+          <span class="abs-prefix" id="abs-prefix">K</span>
+          <input id="r-km" type="number" inputmode="numeric" min="0" step="1" aria-label="Kilómetro" placeholder="km" class="num-input">
+          <span class="abs-plus">+</span>
+          <input id="r-m" type="number" inputmode="numeric" min="0" max="999" step="1" aria-label="Metros" placeholder="000" class="num-input">
+        </div>
+        <p class="abs-preview" id="abs-preview"></p>
+      </section>
+
+      <!-- 3. Lámina -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-n">3</span>Tipo de lámina</h2>
+        <div class="seg seg-wide" id="lamina-seg" role="radiogroup" aria-label="Tipo de lámina"></div>
+        <fieldset class="field" id="sp-color-field" hidden>
+          <legend>Color de la lámina (preventiva)</legend>
+          <div class="seg seg-wide" role="radiogroup">
+            <input type="radio" name="r-spcolor" id="sp-am" value="amarillo"><label for="sp-am"><span class="sw sw-amarillo"></span>Amarillo</label>
+            <input type="radio" name="r-spcolor" id="sp-avf" value="amarillo_verde_fl"><label for="sp-avf"><span class="sw sw-amarillo_verde_fl"></span>Amarillo-verde fluorescente</label>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- 4. Lecturas -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-n">4</span>Lecturas <span class="unit">cd·lx⁻¹·m⁻² · 0,2° / −4°</span></h2>
+        <div id="lecturas"></div>
+        <p class="empty-note" id="lecturas-empty">Elige la señal y el tipo de lámina para ver los colores a medir.</p>
+      </section>
+
+      <!-- 5. Ubicación y foto -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-n">5</span>Ubicación y foto</h2>
+        <div class="gps-box" id="gps-box">
+          <div class="gps-read">
+            <span class="gps-state" id="gps-state">Buscando GPS…</span>
+            <span class="gps-coords" id="gps-coords">—</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-gps" type="button">Actualizar</button>
+        </div>
+        <div class="photo-row">
+          <label class="btn btn-secondary photo-btn" for="r-foto">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            <span id="foto-label">Tomar foto</span>
+          </label>
+          <input id="r-foto" type="file" accept="image/*" capture="environment" class="visually-hidden">
+          <div class="photo-thumb" id="photo-thumb" hidden>
+            <img id="photo-img" alt="Foto de la señal">
+            <button type="button" class="thumb-x" id="btn-quitar-foto" aria-label="Quitar foto">×</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Garmin -->
+      <section class="step">
+        <h2 class="step-title"><span class="step-n">6</span>Foto GPS Garmin</h2>
+        <div class="field">
+          <label for="r-garmin">Consecutivo de la foto <span class="hint">mínimo 4 dígitos</span></label>
+          <input id="r-garmin" type="text" inputmode="numeric" pattern="[0-9]{4,}" maxlength="8" placeholder="0001" class="num-input garmin-input" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="r-obs">Observaciones <span class="hint">opcional</span></label>
+          <textarea id="r-obs" rows="2" placeholder="Ej. lámina decolorada, señal girada, obstrucción por vegetación"></textarea>
+        </div>
+      </section>
+
+      <p class="form-error" id="r-error" hidden></p>
+
+      <div class="savebar">
+        <div class="savebar-result" id="savebar-result"><span class="chip chip-nd">Sin evaluar</span></div>
+        <button class="btn btn-primary" id="btn-guardar" type="submit">Guardar señal</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ LISTA ============ -->
+  <section class="screen" id="scr-lista" hidden>
+    <div class="screen-head">
+      <h1>Registros</h1>
+      <p class="lead" id="lista-lead"></p>
+    </div>
+    <div class="summary" id="summary"></div>
+    <div class="filters">
+      <div class="seg" role="radiogroup" aria-label="Mostrar">
+        <input type="radio" name="f-alcance" id="f-hoy" value="hoy" checked><label for="f-hoy">Jornada actual</label>
+        <input type="radio" name="f-alcance" id="f-todo" value="todo"><label for="f-todo">Todo el proyecto</label>
+      </div>
+    </div>
+    <div id="lista"></div>
+    <button class="btn btn-secondary btn-block" id="btn-sync-now" type="button">Sincronizar ahora</button>
+  </section>
+
+  <!-- ============ AJUSTES ============ -->
+  <section class="screen" id="scr-ajustes" hidden>
+    <div class="screen-head">
+      <h1>Ajustes</h1>
+      <p class="lead">Conexión con la hoja de Google Sheets. Se configura una vez en cada celular.</p>
+    </div>
+    <form id="form-ajustes" class="stack" novalidate>
+      <div class="field">
+        <label for="a-url">URL del script (aplicación web)</label>
+        <input id="a-url" type="url" placeholder="https://script.google.com/macros/s/…/exec" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="a-token">Clave de acceso</label>
+        <input id="a-token" type="text" autocomplete="off" placeholder="La misma de la hoja Parametros">
+      </div>
+      <p class="form-error" id="a-msg" hidden></p>
+      <div class="row-btns">
+        <button class="btn btn-primary" type="submit">Guardar y probar</button>
+        <button class="btn btn-ghost" type="button" id="btn-volver">Volver</button>
+      </div>
+    </form>
+    <div class="about">
+      <p><b>Listas y mínimos:</b> <span id="cfg-origen"></span></p>
+      <p><b>Catálogo:</b> Manual de Señalización Vial 2024 · <span id="cat-count"></span> señales</p>
+      <p><b>Versión de la app:</b> <span id="app-version"></span></p>
+    </div>
+  </section>
+
+</main>
+
+<nav class="tabbar" id="tabbar" hidden>
+  <button type="button" class="tab" data-go="registro" id="tab-registro">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Registrar
+  </button>
+  <button type="button" class="tab" data-go="lista" id="tab-lista">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Registros <span class="badge" id="badge-pend" hidden></span>
+  </button>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
