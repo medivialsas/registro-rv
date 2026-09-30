@@ -173,7 +173,7 @@ fieldset.field .seg { margin-bottom: 8px; }
 .picker { display: flex; flex-direction: column; gap: 8px; }
 .picker-list { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
 .picker-list li button {
-  width: 100%; display: grid; grid-template-columns: 76px 1fr; gap: 10px; align-items: baseline; text-align: left;
+  width: 100%; display: grid; grid-template-columns: 40px 76px 1fr; gap: 10px; align-items: baseline; text-align: left;
   padding: 11px 12px; border: 0; border-bottom: 1px solid var(--line); background: transparent; cursor: pointer;
 }
 .picker-list li:last-child button { border-bottom: 0; }
@@ -181,6 +181,23 @@ fieldset.field .seg { margin-bottom: 8px; }
 .pk-code { font-family: var(--mono); font-weight: 700; font-size: 14px; color: var(--brand); }
 .pk-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
 .pk-empty { padding: 14px; color: var(--muted); font-size: 14px; }
+.seg-view label { min-height: 38px; font-size: 13px; }
+.pk-thumb { position: relative; display: grid; place-items: center; width: 40px; height: 40px; }
+.pk-thumb .fam-shape { display: block; width: 26px; height: 26px; }
+.pk-thumb.fam-sp .fam-shape { width: 20px; height: 20px; }
+.pk-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.pk-thumb.has-img .fam-shape { visibility: hidden; }
+.picker-list li button { align-items: center; }
+.picker-grid { list-style: none; margin: 0; padding: 8px; max-height: 420px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.picker-grid li button { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2); cursor: pointer; text-align: center; }
+.picker-grid li button:active, .picker-grid li button:hover { border-color: var(--brand-2); }
+.picker-grid .pk-thumb { width: 64px; height: 64px; }
+.picker-grid .pk-thumb .fam-shape { width: 40px; height: 40px; }
+.picker-grid .pk-thumb.fam-sp .fam-shape { width: 32px; height: 32px; }
+.pk-mini { font-size: 10.5px; line-height: 1.2; font-weight: 600; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.picker-grid .pk-empty { grid-column: 1 / -1; }
+@media (min-width: 480px) { .picker-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
 .sign-card { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 12px; border-radius: var(--r); background: var(--surface-2); border: 1px solid var(--line); }
 .sign-thumb { width: 52px; height: 52px; display: grid; place-items: center; }

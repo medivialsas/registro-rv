@@ -2,7 +2,7 @@
    Funciona sin conexión: todo se guarda en el celular (IndexedDB) y se envía al Google Sheets cuando hay señal. */
 'use strict';
 
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.2.0';
 const COLOR_NAMES = {
   blanco: 'Blanco', rojo: 'Rojo', amarillo: 'Amarillo', amarillo_verde_fl: 'Amarillo-verde fluorescente',
   azul: 'Azul', verde: 'Verde', cafe: 'Café'
@@ -185,15 +185,26 @@ function renderJornadaBar() {
 
 /* ---------------- Registro: señal ---------------- */
 function familia() { const r = $('input[name=r-familia]:checked'); return r ? r.value : ''; }
+function pickerView() { const r = $('input[name=pk-view]:checked'); return r ? r.value : 'mini'; }
+function signThumb(s) {
+  return `<span class="pk-thumb fam-${s.f.toLowerCase()}"><span class="fam-shape"></span>${s.img ? `<img src="img/${esc(s.img)}" alt="" loading="lazy">` : ''}</span>`;
+}
 function renderPicker() {
   const fam = familia();
   $('#picker').hidden = !fam || !!F.senal;
   if (!fam) return;
   const q = norm($('#r-buscar').value.trim());
   const list = CATALOG.filter(s => s.f === fam && (!q || norm(s.c).includes(q) || norm(s.n).includes(q) || s.c.split('-')[1].toLowerCase().startsWith(q)));
-  $('#picker-list').innerHTML = list.length
-    ? list.map(s => `<li><button type="button" data-code="${esc(s.c)}"><span class="pk-code">${esc(s.c)}</span><span class="pk-name">${esc(s.n)}</span></button></li>`).join('')
-    : `<li class="pk-empty">Ninguna señal ${esc(FAM_NAMES[fam].toLowerCase())} coincide con “${esc($('#r-buscar').value)}”.</li>`;
+  const ul = $('#picker-list');
+  const mini = pickerView() === 'mini';
+  ul.className = mini ? 'picker-grid' : 'picker-list';
+  if (!list.length) {
+    ul.innerHTML = `<li class="pk-empty">Ninguna señal ${esc(FAM_NAMES[fam].toLowerCase())} coincide con “${esc($('#r-buscar').value)}”.</li>`;
+    return;
+  }
+  ul.innerHTML = mini
+    ? list.map(s => `<li><button type="button" data-code="${esc(s.c)}" title="${esc(s.n)}">${signThumb(s)}<span class="pk-code">${esc(s.c)}</span><span class="pk-mini">${esc(s.n)}</span></button></li>`).join('')
+    : list.map(s => `<li><button type="button" data-code="${esc(s.c)}">${signThumb(s)}<span class="pk-code">${esc(s.c)}</span><span class="pk-name">${esc(s.n)}</span></button></li>`).join('');
 }
 function selectSenal(code) {
   const s = CATALOG.find(x => x.c === code);
@@ -700,6 +711,10 @@ function bind() {
     if (!F.senal) setTimeout(() => $('#r-buscar').focus({ preventScroll: true }), 50);
   }));
   $('#r-buscar').addEventListener('input', renderPicker);
+  $('#picker-list').addEventListener('error', e => { if (e.target.tagName === 'IMG') e.target.remove(); }, true);
+  $('#picker-list').addEventListener('load', e => { if (e.target.tagName === 'IMG') e.target.parentElement.classList.add('has-img'); }, true);
+  $$('input[name=pk-view]').forEach(r => r.addEventListener('change', () => { LS.set('rv.pkView', r.value); renderPicker(); }));
+  (LS.get('rv.pkView', 'mini') === 'lista' ? $('#pk-v-lista') : $('#pk-v-mini')).checked = true;
   $('#picker-list').addEventListener('click', e => { const b = e.target.closest('button[data-code]'); if (b) selectSenal(b.dataset.code); });
   $('#btn-cambiar-senal').addEventListener('click', clearSenal);
 

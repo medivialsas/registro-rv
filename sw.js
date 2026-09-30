@@ -1,6 +1,6 @@
 /* Service worker: guarda la app en el celular para que abra sin señal.
    Al publicar cambios, subir el número de VERSION para que los celulares se actualicen. */
-const VERSION = 'rv-1.0.2';
+const VERSION = 'rv-1.2.0';
 const ASSETS = [
   './', 'index.html', 'styles.css', 'app.js', 'config.js', 'manifest.webmanifest',
   'data/catalogo.json', 'data/config.json',
@@ -11,7 +11,15 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)));
+  // Precarga la app y, además, todas las imágenes de señales que existan, para verlas sin señal.
+  e.waitUntil(caches.open(VERSION).then(async c => {
+    await c.addAll(ASSETS);
+    try {
+      const cat = await (await fetch('data/catalogo.json')).json();
+      await Promise.all(cat.filter(s => s.img).map(s =>
+        fetch('img/' + s.img).then(r => { if (r.ok) return c.put('img/' + s.img, r); }).catch(() => {})));
+    } catch (err) { /* sin imágenes: se cargan cuando haya red */ }
+  }));
 });
 
 self.addEventListener('activate', e => {
